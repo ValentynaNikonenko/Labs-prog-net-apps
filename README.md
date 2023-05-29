@@ -1,1 +1,2 @@
-Lab1 - servlet example
+## Lab2 - models
+variant 9: phone, file
