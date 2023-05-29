@@ -8,17 +8,20 @@ import ua.kpi.its.lab.rest.repository.FileRepository
 import ua.kpi.its.lab.rest.svc.FileService
 @Service
 class FileServiceImpl(private val fileRepository: FileRepository) : FileService {
+    @PreAuthorize("hasAuthority('EDITOR')")
     override fun createFile(fileRequest: FileRequest): FileResponse {
         val storageFile = StorageFile(name = fileRequest.name, extension = fileRequest.extension)
         val newFile = fileRepository.save(storageFile)
         return FileResponse.fromEntity(newFile)
     }
 
+    @PreAuthorize("hasAuthority('VIEWER')")
     override fun getFileById(id: Long): FileResponse {
         val file = fileRepository.findById(id).orElseThrow()
         return FileResponse.fromEntity(file)
     }
 
+    @PreAuthorize("hasAuthority('EDITOR')")
     override fun updateFileById(id: Long, fileRequest: FileRequest): FileResponse {
         val file = fileRepository.findById(id).orElseThrow()
         file.name = fileRequest.name
@@ -27,6 +30,7 @@ class FileServiceImpl(private val fileRepository: FileRepository) : FileService 
         return FileResponse.fromEntity(updFile)
     }
 
+    @PreAuthorize("hasAuthority('EDITOR')")
     override fun deleteFileById(id: Long): Boolean {
         fileRepository.deleteById(id)
         return true
